@@ -1,3 +1,10 @@
+/* Sudoku Solver using backtracking algorithm
+ * Written by C.Rajgopal.
+ * Version 1.0
+ */
+
+
+
 #include<stdio.h>
 #include<stdlib.h>
 

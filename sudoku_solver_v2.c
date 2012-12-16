@@ -1,11 +1,13 @@
 /* Sudoku Solver using backtracking algorithm
  * Written by C.Rajgopal.
- * Version 1.2
+ * Version 2.0
  */
+
 
 
 #include<stdio.h>
 #include<stdlib.h>
+
 
 int a[9][9] = {
                   8,0,0,0,0,0,0,0,0,
@@ -17,7 +19,8 @@ int a[9][9] = {
                   0,0,1,0,0,0,0,6,8,
                   0,0,8,5,0,0,0,1,0,
                   0,9,0,0,0,0,4,0,0
-               };
+               }; //That's world's hardest sudoku! FYI
+               
 int b[9][9];
 int backtrack = 0;
 int curr_row;
@@ -57,20 +60,6 @@ int check_violation(row,col,val){
 
 return(0);
 }
-
-//int checkEmptySlot(int row, int col){
-//     int r1,c1;
-//     for(r1=row;r1<9;r1++){
-//        for(c1=col;c1<9;c1++){
-//            if(a[r1][c1] == 0){
-//                return 1;
-//            }
-//            else{
-//                return 0;
-//            }
-//        }
-//    }
-//}
 
 int getRow(int row,int col){
     int r,c;
@@ -119,17 +108,14 @@ int insertValue(int row, int col,int prev_val){
     curr_col = col;
 
 	if(prev_val != 0){
-      //printf("Prev val = %d, Row=%d, col=%d\n",prev_val,row,col);
-	  backtrack=0;
-      a[row][col]=0;
+	  backtrack=0; //Clearing flags
+      a[row][col]=0; //Making the prev. position empty
     }
 
     if(a[row][col] == 0){
         for(k = prev_val+1;k<=9;k++){
-            //printf("Val of k - %d, row - %d, col - %d\n",k,row,col);
             if(check_violation(row,col,k) == 0){
                 a[row][col] = k;
-              	//printf("Assigned val k = %d at row = %d, col = %d\n",k,row,col);
 				return(1);
             }
         }
@@ -138,7 +124,7 @@ int insertValue(int row, int col,int prev_val){
         }
     }
     
-    return(99); //case where a[row][col] != 0
+    return(99); //case : where a[row][col] != 0 
 }
 
 
@@ -167,11 +153,10 @@ int main(){
     
     curr_col = 0;
     curr_row = 0;
-    
-  //  printf("%d\n", getRow(6,1));
-  //  printf("%d\n", getCol(6,1));
-    
+      
     rInsert = insertValue(0,0,0);
+
+	//Starting the solution. Recursive calls to insertValue based on condition of return value and grid positions
 	while(rInsert != 100){
 		while(rInsert==1){
 			if(curr_col==8){
@@ -179,10 +164,9 @@ int main(){
                     curr_col=-1;
                 }
                 if(curr_row>8){
-                    rInsert = 100;
+                    rInsert = 100; //Time to quit
                 }
                 else{
-                    //printf("Pt. of recursion - row = %d, col = %d\n",curr_row,curr_col+1);
 					rInsert = insertValue(curr_row,curr_col+1,0);
                 }
 		}
@@ -190,24 +174,23 @@ int main(){
 		if(rInsert == 0){
 				backtrack = rInsert;
 				if((curr_row+curr_col)!=0){
-                	//printf("I am being called at location %d,%d!\n",curr_row,curr_col);
                 	prev_row=getRow(curr_row,curr_col);
                 	prev_col=getCol(curr_row,curr_col);
                 	prev_val=a[prev_row][prev_col];
-                	//printf("Backtracking = %d now towards %d,%d!\n",backtrack,prev_row,prev_col);
                 	backtrack = 0;
                 	rInsert = insertValue(prev_row,prev_col,prev_val);
         		}
 		        else if(curr_row==0 && curr_col==0){
-		               //printf("Called at origin\n");
 		                backtrack=0;
-		                rInsert = insertValue(0,0,0);
+		                rInsert = insertValue(0,0,0); //Ye can't backtrack from origin!
 		        }
 		        else{
 		                printf("No solution...Exiting\n");
+		                rInsert = 100;
 		                exit(0);
 		            }
      	} 
+     	
      	if(rInsert == 99){
  		 		if(curr_col==8){
 	                curr_row=curr_row+1;
@@ -222,6 +205,9 @@ int main(){
                 }
      	}
 	}
+	
+	//Printing the answer grid
+	printf("\nAnd the answer is...\n");
 	
 	for(i=0;i<9;i++){
         printf("\n");
