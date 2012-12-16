@@ -1,6 +1,5 @@
 /* Sudoku Solver using backtracking algorithm
  * Written by C.Rajgopal.
- * Version 2.0
  */
 
 
